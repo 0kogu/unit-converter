@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Unit Converter</h1>
+
+        <!-- Form for Unit Conversion -->
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <!-- Category Selection -->
+            <div class="form-group">
+                <label for="category">Select Category:</label>
+                {{ form.category(class="form-control") }}
+            </div>
+
+            <!-- Value to Convert -->
+            <div class="form-group">
+                <label for="value">Value:</label>
+                {{ form.value(class="form-control") }}
+            </div>
+
+            <!-- From Unit Selection -->
+            <div class="form-group">
+                <label for="from_unit">From Unit:</label>
+                {{ form.from_unit(class="form-control") }}
+            </div>
+
+            <!-- To Unit Selection -->
+            <div class="form-group">
+                <label for="to_unit">To Unit:</label>
+                {{ form.to_unit(class="form-control") }}
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn">Convert</button>
+        </form>
+
+        <!-- Display Conversion Result -->
+        {% if conversion_result %}
+            <div class="result">
+                <h3>Converted Value: {{ conversion_result }}</h3>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- JavaScript to Update Unit Options Based on Category -->
+    <script>
+        const unitOptions = {
+            'length': [
+                { value: 'meters', text: 'Meters' },
+                { value: 'feet', text: 'Feet' }
+            ],
+            'temperature': [
+                { value: 'celsius', text: 'Celsius' },
+                { value: 'fahrenheit', text: 'Fahrenheit' }
+            ],
+            'weight': [
+                { value: 'kg', text: 'Kilograms' },
+                { value: 'lbs', text: 'Pounds' }
+            ]
+        };
+
+        const categoryField = document.querySelector('[name="category"]');
+        const fromUnitField = document.querySelector('[name="from_unit"]');
+        const toUnitField = document.querySelector('[name="to_unit"]');
+
+        // Function to populate unit dropdown based on selected category
+        function populateUnitOptions() {
+            const selectedCategory = categoryField.value;
+            const options = unitOptions[selectedCategory] || [];
+
+            // Clear current options
+            fromUnitField.innerHTML = '';
+            toUnitField.innerHTML = '';
+
+            // Populate "From" and "To" unit options
+            options.forEach(option => {
+                const fromOption = new Option(option.text, option.value);
+                const toOption = new Option(option.text, option.value);
+                fromUnitField.appendChild(fromOption);
+                toUnitField.appendChild(toOption);
+            });
+        }
+
+        // Update unit options on category change
+        categoryField.addEventListener('change', populateUnitOptions);
+
+        // Initial population of unit options
+        populateUnitOptions();
+    </script>
+</body>
+</html>
